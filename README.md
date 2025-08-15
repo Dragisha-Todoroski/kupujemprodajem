@@ -19,6 +19,10 @@ Users can register and log in as:
 - **Admin seeder** created (`AdminUserSeeder`) to generate a fixed admin account.
 - `sessions` and `password_reset_tokens` tables migrated and compatible with UUID users.
 - Basic User model setup with UUID generation in `boot()` method.
+- **Category system**:
+  - `categories` table with UUID primary key and `parent_id` for nested categories
+  - `Category` model with UUID generation and parent/children relationships
+  - `CategorySeeder` with 3 levels of category nesting
 
 ---
 
@@ -54,8 +58,8 @@ php artisan key:generate
 php artisan migrate
 ```
 
-6. Seed the admin user
+6. Seed the database
 
 ```bash
-php artisan db:seed --class=AdminUserSeeder
+php artisan db:seed
 ```
