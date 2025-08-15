@@ -22,9 +22,17 @@ class Category extends Model
     protected static function boot() {
         parent::boot();
 
+        // Auto-assign a new UUID to primary key on model creation if it's empty
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+
+        // Cascade delete children at the model level
+        static::deleting(function ($model) {
+            foreach ($model->children as $child) {
+                $child->delete(); // triggers deleting event on children too
             }
         });
     }
