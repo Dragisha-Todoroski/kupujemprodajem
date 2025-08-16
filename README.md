@@ -20,9 +20,20 @@ Users can register and log in as:
 - `sessions` and `password_reset_tokens` tables migrated and compatible with UUID users.
 - Basic User model setup with UUID generation in `boot()` method.
 - **Category system**:
-  - `categories` table with UUID primary key and `parent_id` for nested categories
-  - `Category` model with UUID generation and parent/children relationships
-  - `CategorySeeder` with 3 levels of category nesting
+  - `categories` table with UUID primary key and `parent_id` for nested categories.
+  - `Category` model with UUID generation and parent/children relationships.
+  - `CategorySeeder` with 3 levels of category nesting.
+  - Recursive fetching of all nested descendants via `allDescendantsRecursive()` method.
+  - **Validation and business rules**:
+    - Prevents circular relationships (a category cannot be its own or its child's descendant).
+    - Validation handled in `StoreCategoryRequest` and `UpdateCategoryRequest` using reusable traits (`CategoryRulesTrait` and `CategoryMessagesTrait`).
+  - **Admin-only management**:
+    - `CategoryPolicy` ensures only admin users can create, edit, update, or delete categories.
+    - `descendantsKeys()` helps enforce safe category updates.
+  - **Service layer**:
+    - `CategoryService` interface defines standard methods for category operations.
+    - `EloquentCategoryService` implements `CategoryService`, including recursive fetching of categories.
+
 
 ---
 
