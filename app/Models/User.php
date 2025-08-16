@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use App\Enums\UserRole;
 
 class User extends Authenticatable
 {
@@ -33,11 +34,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
     }
 
-    public function isAdmin() {
-        return $this->role === 'admin';
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::ADMIN;
     }
 
     protected static function boot() {
