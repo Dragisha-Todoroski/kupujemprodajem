@@ -19,6 +19,23 @@ class Category extends Model
         'parent_id',
     ];
 
+    /*
+    * Method is used to ensure a category isn't the child of its own descendants (circular parenting)
+    * It returns a merged array of this category's descendants' primary key values
+    * This array's primary key values are considered forbidden for the `parent_id` property
+    */
+    public function descendantsKeys(): array
+    {
+        $keys = [];
+
+        foreach ($this->children as $child) {
+            $keys[] = $child->getKey(); // add child primary key value
+            $keys = array_merge($keys, $child->descendantsKeys()); // recursively add grandchildren, great-grandchildren, etc.
+        }
+
+        return $keys;
+    }
+
     protected static function boot() {
         parent::boot();
 

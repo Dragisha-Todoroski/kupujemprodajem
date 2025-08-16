@@ -33,6 +33,10 @@ class User extends Authenticatable
     'password' => 'hashed',
 ];
 
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
     protected static function boot() {
         parent::boot();
 
@@ -41,9 +45,5 @@ class User extends Authenticatable
                 $model->{$model->getKeyName()} = (string) Str::uuid();
             }
         });
-    }
-
-    public function isAdmin() {
-        return $this->role === 'admin';
     }
 }
