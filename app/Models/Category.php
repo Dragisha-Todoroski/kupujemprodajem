@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -34,6 +35,18 @@ class Category extends Model
         }
 
         return $keys;
+    }
+
+    /**
+     * Get all descendants of this category recursively.
+     *
+     * This returns the category's immediate children,
+     * and for each child, it also loads their children recursively.
+     * The result is a nested tree structure of all descendants.
+     */
+    public function allDescendantsRecursive(): HasMany
+    {
+        return $this->children()->with('allDescendantsRecursive');
     }
 
     protected static function boot() {

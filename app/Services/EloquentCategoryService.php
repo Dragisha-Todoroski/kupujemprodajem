@@ -11,7 +11,10 @@ class EloquentCategoryService implements CategoryService
     /** Fetch all categories */
     public function getAll(): Collection
     {
-        return Category::with('children')->get();
+        // Returns multi-level categories
+        return Category::with('allDescendantsRecursive') // each nested child is included automatically
+            ->whereNull('parent_id') // fetches only top-level categories as starting point
+            ->get();
     }
 
     /** Create a new category from validated data */

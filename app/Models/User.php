@@ -28,10 +28,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-    'email_verified_at' => 'datetime',
-    'password' => 'hashed',
-];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     public function isAdmin() {
         return $this->role === 'admin';
