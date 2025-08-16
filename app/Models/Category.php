@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $keyType = 'string';
     public $incrementing = false;
@@ -49,15 +49,9 @@ class Category extends Model
         return $this->children()->with('allDescendantsRecursive');
     }
 
-    protected static function boot() {
+    protected static function boot(): void
+    {
         parent::boot();
-
-        // Auto-assign a new UUID to primary key on model creation if it's empty
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
 
         // Cascade delete children at the model level
         static::deleting(function ($model) {
@@ -67,11 +61,13 @@ class Category extends Model
         });
     }
 
-    public function parent() {
+    public function parent(): BelongsTo
+    {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function children() {
+    public function children(): HasMany
+    {
         return $this->hasMany(Category::class, 'parent_id');
     }
 }

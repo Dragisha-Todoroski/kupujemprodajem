@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 interface CategoryService
 {
-    /** Fetch all products */
+    /** Fetch all categories */
     public function getAll(): Collection;
 
     /** Create a new category from validated data */
