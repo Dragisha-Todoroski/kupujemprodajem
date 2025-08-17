@@ -8,9 +8,9 @@ trait CategoryMessagesTrait
     {
         return [
             // `name` field
-            'name.required' => 'Category name is required.',
-            'name.min' => 'Category name must be at least 1 character.',
-            'name.max' => 'Category name may not exceed 100 characters.',
+            'name.required' => 'Name is required.',
+            'name.min' => 'Name must be at least 1 character.',
+            'name.max' => 'Name may not exceed 100 characters.',
 
             // `parent_id` field
             'parent_id.uuid' => 'Parent category ID must be in a valid format.',

@@ -8,24 +8,28 @@ use App\Http\Requests\Traits\CategoryTraits\CategoryMessagesTrait;
 
 class StoreCategoryRequest extends FormRequest
 {
+    use CategoryRulesTrait, CategoryMessagesTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
+        // Must be authenticated AND an admin to create categories
         return auth()->check() && auth()->user()->isAdmin();
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Get the validation rules that apply to the request
      */
     public function rules(): array
     {
         return $this->categoryRules('required');
     }
 
+    /**
+     * Get the validation error messages that apply to the request
+     */
     public function messages(): array
     {
         return $this->categoryMessages();
