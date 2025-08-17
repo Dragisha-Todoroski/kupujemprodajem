@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\Category;
 use App\Policies\CategoryPolicy;
+use App\Models\Ad;
+use App\Policies\AdPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,8 +15,9 @@ class AuthServiceProvider extends ServiceProvider
      * The policy mappings for the application.
      */
     protected $policies = [
-        // Map category to its policy
+        // Map models to their policies
         Category::class => CategoryPolicy::class,
+        Ad::class => AdPolicy::class,
     ];
 
     /**
