@@ -9,6 +9,22 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        // Creates 7 random top-level categories
+        $parents = Category::factory(7)->create();
+
+        foreach ($parents as $parent) {
+            // Each parent gets between 0–4 random children
+            $children = Category::factory(rand(0, 4))
+                ->create(['parent_id' => $parent->getKey()]);
+
+            foreach ($children as $child) {
+                // Each child gets 0–3 grandchildren
+                Category::factory(rand(0, 3))
+                    ->create(['parent_id' => $child->getKey()]);
+            }
+        }
+
+        // Manual categories:
         // Top-level categories
         $computers = Category::firstOrCreate(['name' => 'Computers']);
         $electronics = Category::firstOrCreate(['name' => 'Electronics']);
