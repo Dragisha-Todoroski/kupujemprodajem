@@ -62,9 +62,11 @@ class AdController extends Controller
     /**
      * Display single ad details
      */
-    public function show(string $id): View
+    public function show(Ad $ad): View
     {
-        $ad = $this->adService->getById($id);
+        // Eager loads user and category for this ad
+        $ad->load(['user', 'category']);
+
         $categories = $this->categoryService->getAll();
         return view('frontend.ads.show', compact('ad', 'categories'));
     }

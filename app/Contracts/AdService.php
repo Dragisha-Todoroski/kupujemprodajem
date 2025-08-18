@@ -11,9 +11,6 @@ interface AdService
     /** Fetch all ads, optionally paginated */
     public function getAll(?int $perPage = null) : LengthAwarePaginator;
 
-    /** Fetch an ad by its ID */
-    public function getById(string $id): Ad;
-
     /** Search ads by filters, optionally paginated */
     public function search(array $filters, ?int $perPage = null): LengthAwarePaginator;
 

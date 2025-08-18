@@ -23,12 +23,6 @@ class EloquentAdService implements AdService
         return $query->get();
     }
 
-    /** Fetch an ad by its ID, if it exists */
-    public function getById(string $id): Ad
-    {
-        return Ad::with(['user', 'category'])->findOrFail($id);
-    }
-
     /**
      * Search ads by filters, optionally paginated
      *
