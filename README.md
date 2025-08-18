@@ -22,6 +22,7 @@ Users can register and log in as:
 - **Category system**:
   - `categories` table with UUID primary key and `parent_id` for nested categories.
   - `Category` model with UUID generation and parent/children relationships.
+  - `UserRole` enum for `role` property of `User` model.
   - Recursive fetching of all nested descendants via `allDescendantsRecursive()` method.
   - `descendantsKeys()` helps enforce safe category updates.
   - **Validation and business rules**:
@@ -35,6 +36,7 @@ Users can register and log in as:
 - **Ads system**:
   - `ads` table with UUID primary key, and relations to `users` and `categories`.
   - `Ad` model with UUID generation and relationships to `User` and `Category`.
+  - `AdCondition` enum for `condition` property of `Ad` model.
   - **Validation and business rules**:
     - Validation handled in `StoreAdRequest` and `UpdateAdRequest` using reusable traits (`AdRulesTrait` and `AdMessagesTrait`).
   - **Service layer**:
