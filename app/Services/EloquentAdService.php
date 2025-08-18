@@ -3,14 +3,16 @@
 namespace App\Services;
 
 use App\Models\Ad;
-use App\Services\Contracts\AdService;
+use App\Contracts\AdService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EloquentAdService implements AdService
 {
     /** Fetch all ads, optionally paginated */
-    public function getAll(?int $perPage = null)
+    public function getAll(?int $perPage = null): LengthAwarePaginator
     {
         $query = Ad::with(['user', 'category'])->latest();
 
@@ -21,22 +23,8 @@ class EloquentAdService implements AdService
         return $query->get();
     }
 
-    /** Fetch all ads by specific category, optionally paginated */
-    public function getByCategory(string $categoryId, ?int $perPage = null)
-    {
-        $query = Ad::with(['user', 'category'])
-                    ->where('category_id', $categoryId)
-                    ->latest();
-
-        if ($perPage) {
-            return $query->paginate($perPage);
-        }
-
-        return $query->get();
-    }
-
     /** Fetch an ad by its ID, if it exists */
-    public function getById(string $id): ?Ad
+    public function getById(string $id): Ad
     {
         return Ad::with(['user', 'category'])->findOrFail($id);
     }
@@ -52,7 +40,7 @@ class EloquentAdService implements AdService
      * - location
      * - category_id
      */
-    public function search(array $filters, ?int $perPage = null)
+    public function search(array $filters, ?int $perPage = null): LengthAwarePaginator
     {
         $query = Ad::with(['user', 'category'])->latest();
 
@@ -88,15 +76,33 @@ class EloquentAdService implements AdService
     }
 
     /** Create a new ad from validated data */
-    public function create(array $data): Ad
+    public function create(array $data, ?UploadedFile $image = null): Ad
     {
+        $data['user_id'] = Auth::id();
+
+        // Handles image upload if provided
+        if ($image) {
+            $data['image_path'] = $image->store('ads', 'public'); // saves the uploaded image in 'storage/app/public/ads'
+        }
+
         return Ad::create($data);
     }
 
      /** Update an existing ad with validated data */
-    public function update(Ad $ad, array $data): Ad
+    public function update(Ad $ad, array $data, ?UploadedFile $image = null): Ad
     {
+        // Handles image upload if provided
+        if ($image) {
+            // Optionally, deletes old image if exists
+            if ($ad->image_path) {
+                Storage::disk('public')->delete($ad->image_path);
+            }
+
+            $data['image_path'] = $image->store('ads', 'public'); // saves the uploaded image in 'storage/app/public/ads'
+        }
+
         $ad->update($data);
+
         return $ad;
     }
 

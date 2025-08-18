@@ -20,7 +20,7 @@ class CategoryPolicy
     /**
      * Determine whether the user can view a single category
      */
-    public function view(User $user, Category $category): bool
+    public function view(?User $user, Category $category): bool
     {
         // Everyone who is logged in can view a single category
         // Guests can be handled in controllers separately for frontend browsing

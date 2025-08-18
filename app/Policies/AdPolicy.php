@@ -11,7 +11,7 @@ class AdPolicy
     /**
      * Determine whether the user can view any ads
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
         // Everyone can view ad listings (including guests)
         return true;
@@ -20,7 +20,7 @@ class AdPolicy
     /**
      * Determine whether the user can view a single ad
      */
-    public function view(User $user, Ad $ad): bool
+    public function view(?User $user, Ad $ad): bool
     {
         // Everyone can view individual ads (including guests)
         return true;

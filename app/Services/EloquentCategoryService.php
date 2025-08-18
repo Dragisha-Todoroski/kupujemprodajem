@@ -17,6 +17,12 @@ class EloquentCategoryService implements CategoryService
             ->get();
     }
 
+    public function getById(string $id): Category
+    {
+        // Throws ModelNotFoundException if not found
+        return Category::findOrFail($id);
+    }
+
     /** Create a new category from validated data */
     public function create(array $data): Category
     {

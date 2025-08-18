@@ -11,34 +11,47 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function __construct()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        // Only allow customers
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (!Auth::user()->isCustomer()) {
+                abort(403);
+            }
+            return $next($request);
+        });
     }
 
     /**
-     * Update the user's profile information.
+     * Show the customer profile page with their own ads
+     */
+    public function edit(Request $request): View
+    {
+        $user = $request->user();
+        $ads = $user->ads()->latest()->get(); // fetches only this customer's ads
+
+        return view('profile.edit', compact('user', 'ads'));
+    }
+
+    /**
+     * Update the customer's profile info
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Delete the customer's account
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -47,9 +60,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();

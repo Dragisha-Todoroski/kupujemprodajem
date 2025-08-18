@@ -28,7 +28,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Redirect based on role
+        if (Auth::user()->isCustomer()) {
+            return redirect()->route('profile.edit'); // customer profile page
+        }
+
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard'); // admin dashboard
+        }
+
+        // Fallback
+        return redirect()->intended(config('fortify.home', '/'));
     }
 
     /**

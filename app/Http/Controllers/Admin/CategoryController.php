@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequests\StoreCategoryRequest;
 use App\Http\Requests\CategoryRequests\UpdateCategoryRequest;
 use App\Models\Category;
-use App\Services\CategoryService;
+use App\Contracts\CategoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -14,7 +14,7 @@ class CategoryController extends Controller
 {
     public function __construct(private readonly CategoryService $categoryService)
     {
-        // Applies auth middleware
+        // Only authenticated users can access these routes
         $this->middleware('auth');
 
         // Applies policy automatically to action methods

@@ -10,6 +10,9 @@ interface CategoryService
     /** Fetch all categories */
     public function getAll(): Collection;
 
+    /** Fetch a single category by ID */
+    public function getById(string $id): Category;
+
     /** Create a new category from validated data */
     public function create(array $data): Category;
 
