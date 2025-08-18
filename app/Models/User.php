@@ -39,6 +39,12 @@ class User extends Authenticatable
         ];
     }
 
+    /** Mutator to set `email` to lowercase before adding to DB */
+    public function setEmailAttribute($value): void
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === UserRole::ADMIN;

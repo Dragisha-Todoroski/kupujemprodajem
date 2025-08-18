@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\AdController as AdminAdController;
 use App\Http\Controllers\Frontend\AdController as FrontendAdController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::prefix('admin')
 
         // Admin Ad CRUD
         Route::resource('ads', AdminAdController::class)->except(['show']);
+
+        // Admin Customer CRUD
+        Route::resource('customers', CustomerController::class)->except(['show']);
     });
 
 

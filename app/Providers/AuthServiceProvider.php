@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Policies\CategoryPolicy;
 use App\Models\Ad;
 use App\Policies\AdPolicy;
+use App\Models\User;
+use App\Policies\CustomerPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         // Map models to their policies
         Category::class => CategoryPolicy::class,
         Ad::class => AdPolicy::class,
+        User::class => CustomerPolicy::class,
     ];
 
     /**

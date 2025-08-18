@@ -7,6 +7,8 @@ use App\Contracts\CategoryService;
 use App\Services\EloquentCategoryService;
 use App\Contracts\AdService;
 use App\Services\EloquentAdService;
+use App\Contracts\CustomerService;
+use App\Services\EloquentCustomerService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(CategoryService::class, EloquentCategoryService::class);
         $this->app->bind(AdService::class, EloquentAdService::class);
+        $this->app->bind(CustomerService::class, EloquentCustomerService::class);
     }
 
     /**

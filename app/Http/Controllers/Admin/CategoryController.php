@@ -22,7 +22,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of all categories for admin
+     * Display all ads in admin dashboard
      */
     public function index(): View
     {

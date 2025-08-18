@@ -48,7 +48,7 @@ class AdController extends Controller
     }
 
     /**
-     * Show the form for editing any a specific ad (admins can edit any ad)
+     * Show the form for editing any specific ad (admins can edit any ad)
      */
     public function edit(Ad $ad): View
     {
