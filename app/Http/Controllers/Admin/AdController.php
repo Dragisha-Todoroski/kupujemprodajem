@@ -13,7 +13,7 @@ class AdController extends Controller
 {
     public function __construct(private readonly AdService $adService) {
         // Only authenticated users can access these routes
-        $this->middleware('auth');
+        $this->middleware(['auth', 'is_admin']);
 
         // Applies policy automatically to action methods
         $this->authorizeResource(Ad::class, 'ad');

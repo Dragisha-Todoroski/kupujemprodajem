@@ -19,7 +19,7 @@ class AdController extends Controller
         private readonly CategoryService $categoryService
     ) {
         // Ensures auth for create/edit/delete by customers
-        $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        $this->middleware(['auth', 'is_customer'])->only(['create', 'store', 'edit', 'update', 'destroy']);
 
         // Applies policy automatically to action methods
         $this->authorizeResource(Ad::class, 'ad');
