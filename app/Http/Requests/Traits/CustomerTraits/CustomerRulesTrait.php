@@ -24,8 +24,11 @@ trait CustomerRulesTrait
                     ? Rule::unique('users', 'email')->ignore($customer->getKey())
                     : Rule::unique('users', 'email'),
             ],
+
             // On updates, password doesn't need to be provided
-            'password' => array_merge([$requirement, 'confirmed'], Password::defaults()),
+            'password' => $requirement === 'required'
+                ? array_merge([$requirement, 'confirmed', Password::defaults()])
+                : ['nullable', 'confirmed', Password::defaults()],
         ];
     }
 }

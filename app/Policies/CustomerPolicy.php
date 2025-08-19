@@ -23,7 +23,7 @@ class CustomerPolicy
     public function view(User $user, User $customer): bool
     {
         // Only if the user is an admin and the target user is a customer
-        return $user->isAdmin() && $customer->role === UserRole::CUSTOMER->value;
+        return $user->isAdmin() && $customer->isCustomer();
     }
 
     /**
@@ -41,7 +41,7 @@ class CustomerPolicy
     public function update(User $user, User $customer): bool
     {
         // Only if the user is an admin and the target user is a customer
-        return $user->isAdmin() && $customer->role === UserRole::CUSTOMER->value;
+        return $user->isAdmin() && $customer->isCustomer();
     }
 
     /**
@@ -50,6 +50,6 @@ class CustomerPolicy
     public function delete(User $user, User $customer): bool
     {
         // Only allows deleting if the current user is admin and the target is a customer
-        return $user->isAdmin() && $customer->role === UserRole::CUSTOMER->value;
+        return $user->isAdmin() && $customer->isCustomer();
     }
 }

@@ -9,8 +9,8 @@
     {{-- Stats --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div class="bg-white shadow rounded-lg p-6 text-center">
-            <h2 class="text-xl font-semibold">Users</h2>
-            <p class="text-2xl mt-2">{{ $userCount }}</p>
+            <h2 class="text-xl font-semibold">Customers</h2>
+            <p class="text-2xl mt-2">{{ $customerCount }}</p>
         </div>
         <div class="bg-white shadow rounded-lg p-6 text-center">
             <h2 class="text-xl font-semibold">Ads</h2>
@@ -37,7 +37,7 @@
 
     {{-- Optional: link to frontend view --}}
     <div class="mt-10 text-center">
-        <a href="{{ route('ads.index') }}" class="text-blue-600 hover:underline">
+        <a href="{{ route('ads.index') }}" class="px-6 py-3 bg-gray-600 text-white rounded hover:bg-gray-700">
             View Home Page
         </a>
     </div>

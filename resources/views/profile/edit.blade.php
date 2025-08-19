@@ -6,6 +6,13 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
+            <div class="mb-6">
+                <a href="{{ url('/') }}"
+                class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+                    Back to Home
+                </a>
+            </div>
+
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-profile-information-form')

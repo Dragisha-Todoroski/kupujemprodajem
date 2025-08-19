@@ -16,7 +16,7 @@ class EloquentCustomerService implements CustomerService
      */
     public function getAll(?int $perPage = null): LengthAwarePaginator
     {
-        $query = User::where('role', UserRole::CUSTOMER->value);
+        $query = User::where('role', UserRole::CUSTOMER->value)->withCount('ads');
 
         if ($perPage) {
             return $query->paginate($perPage);
@@ -46,7 +46,7 @@ class EloquentCustomerService implements CustomerService
      */
     public function update(User $customer, array $data): User
     {
-        if ($customer->role !== UserRole::CUSTOMER->value) {
+        if (!$customer->isCustomer()) {
             throw new \Exception("Cannot update admin users.");
         }
 
@@ -70,7 +70,7 @@ class EloquentCustomerService implements CustomerService
     public function delete(User $customer): bool
     {
         // Never deletes admins
-        if ($customer->role !== UserRole::CUSTOMER->value) {
+        if (!$customer->isCustomer()) {
             return false;
         }
 

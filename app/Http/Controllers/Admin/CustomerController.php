@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Customer\StoreCustomerRequest;
-use App\Http\Requests\Customer\UpdateCustomerRequest;
+use App\Http\Requests\CustomerRequests\StoreCustomerRequest;
+use App\Http\Requests\CustomerRequests\UpdateCustomerRequest;
 use App\Contracts\CustomerService;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +26,7 @@ class CustomerController extends Controller
      */
     public function index(): View
     {
-        $customers = $this->customerService->getAll(15);
+        $customers = $this->customerService->getAll(5);
         return view('admin.customers.index', compact('customers'));
     }
 

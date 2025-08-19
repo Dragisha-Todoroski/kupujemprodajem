@@ -3,8 +3,8 @@
 namespace App\Http\Requests\CustomerRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Traits\CustomerRulesTrait;
-use App\Traits\CustomerMessagesTrait;
+use App\Http\Requests\Traits\CustomerTraits\CustomerRulesTrait;
+use App\Http\Requests\Traits\CustomerTraits\CustomerMessagesTrait;
 
 class StoreCustomerRequest extends FormRequest
 {
