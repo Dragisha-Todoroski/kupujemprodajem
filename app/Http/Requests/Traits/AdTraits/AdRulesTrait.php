@@ -13,7 +13,7 @@ trait AdRulesTrait
         return [
             'title' => [$requirement, 'string', 'min:1', 'max:100'],
             'description' => ['nullable', 'string', 'max:400'],
-            'price' => [$requirement, 'numeric', 'gt:0'],
+            'price' => [$requirement, 'numeric', 'gt:0', 'max:99999999.99'],
             'condition' => [$requirement, 'string', 'in:new,used'],
             'image_path' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
             'contact_phone' => [$requirement, 'string', 'min:1', 'max:15'],

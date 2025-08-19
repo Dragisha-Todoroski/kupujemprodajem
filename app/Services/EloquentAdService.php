@@ -72,6 +72,7 @@ class EloquentAdService implements AdService
     /** Create a new ad from validated data */
     public function create(array $data, ?UploadedFile $image = null): Ad
     {
+        // Attaches the current user to their new ad
         $data['user_id'] = Auth::id();
 
         // Handles image upload if provided

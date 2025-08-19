@@ -1,24 +1,42 @@
+# Logs
 *.log
+
+# Mac / Windows
 .DS_Store
+Thumbs.db
+
+# Environment files
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
+
+# IDE / Editor folders
 /.idea
+/.vscode
+/.fleet
 /.nova
 /.phpunit.cache
-/.vscode
 /.zed
+
+# Composer / PHP
+/vendor
 /auth.json
+Homestead.json
+Homestead.yaml
+.phpactor.json
+.phpunit.result.cache
+
+# Node / frontend
 /node_modules
 /public/build
 /public/hot
-/public/storage
+
+# Laravel storage
 /storage/*.key
 /storage/pail
-/vendor
-Homestead.json
-Homestead.yaml
-Thumbs.db
+/storage/app/public/ads/*       # Ignore all uploaded ad images
+!/storage/.gitignore             # Keep gitignore in storage
+!/storage/framework/             # Keep Laravel framework folders
+
+# Public storage symlink itself stays
+/public/storage                  # Optional: keep symlink but ignore its contents

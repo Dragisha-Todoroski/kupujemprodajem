@@ -9,12 +9,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class EloquentUserService implements CustomerService
+class EloquentCustomerService implements CustomerService
 {
     /**
      * Fetch all customers, optionally paginated
      */
-    public function getAll(?int $perPage = null)
+    public function getAll(?int $perPage = null): LengthAwarePaginator
     {
         $query = User::where('role', UserRole::CUSTOMER->value);
 

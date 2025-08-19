@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Http\Requests\Traits\CustomerTraits;
 
 trait CustomerMessagesTrait
 {

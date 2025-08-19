@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\CategoryRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Traits\CategoryTraits\CategoryRulesTrait;

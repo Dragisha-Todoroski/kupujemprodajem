@@ -19,6 +19,7 @@ trait AdMessagesTrait
             'price.required' => 'Price is required.',
             'price.numeric' => 'Price must be a number.',
             'price.gt' => 'Price must be greater than 0.',
+            'price.max' => 'Price may not exceed 99,999,999.99.',
 
             // `condition` field
             'condition.required' => 'Condition is required.',

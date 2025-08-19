@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Frontend;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,8 +13,8 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
-        // Only allow customers
-        $this->middleware(['auth', 'is_customer']);
+        // Only allow authenticated users
+        $this->middleware(['auth']);
     }
 
     /**
@@ -22,8 +23,9 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $ads = $user->ads()->latest()->get(); // fetches only this customer's ads
 
+        // Only fetches ads for customers
+        $ads = $user->isCustomer() ? $user->ads()->latest()->get() : collect();
         return view('profile.edit', compact('user', 'ads'));
     }
 
@@ -32,6 +34,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $user = $request->user();
         $request->user()->fill($request->validated());
 
         if ($user->isDirty('email')) {

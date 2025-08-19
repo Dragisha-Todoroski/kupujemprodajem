@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum AdCondition : string
 {
-    case NEW = "new";
-    case USED = "used";
+    case NEW = 'new';
+    case USED = 'used';
 }

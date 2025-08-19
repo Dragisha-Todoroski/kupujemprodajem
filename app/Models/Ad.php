@@ -21,6 +21,8 @@ class Ad extends Model
         'price',
         'condition',
         'image_path',
+
+        // Attaches contact_phone per ad, not user, for flexibility purposes
         'contact_phone',
         'location',
         'user_id',

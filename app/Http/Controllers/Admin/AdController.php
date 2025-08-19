@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdRequests\StoreAdRequest;
+use App\Http\Requests\AdRequests\UpdateAdRequest;
 use App\Models\Ad;
 use App\Contracts\AdService;
+use App\Contracts\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class AdController extends Controller
 {
-    public function __construct(private readonly AdService $adService) {
+    public function __construct(
+        private readonly AdService $adService,
+        private readonly CategoryService $categoryService
+    ) {
         // Only authenticated users can access these routes
         $this->middleware(['auth', 'is_admin']);
 
@@ -33,14 +39,14 @@ class AdController extends Controller
      */
     public function create(): View
     {
-        $categories = $this->categoryService->getAll();
-        return view('admin.ads.create', compact('categories'));
+        $leafCategories = $this->categoryService->getLeafCategories();
+        return view('admin.ads.create', compact('leafCategories'));
     }
 
     /**
      * Store a newly created ad in storage
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreAdRequest $request): RedirectResponse
     {
         $this->adService->create($request->validated(), $request->file('image'));
         return redirect()->route('admin.ads.index')
@@ -52,14 +58,14 @@ class AdController extends Controller
      */
     public function edit(Ad $ad): View
     {
-        $categories = $this->categoryService->getAll();
-        return view('admin.ads.edit', compact('ad', 'categories'));
+        $leafCategories = $this->categoryService->getLeafCategories();
+        return view('admin.ads.edit', compact('ad', 'leafCategories'));
     }
 
     /**
      * Update the specified ad in storage (admins can update any ad)
      */
-    public function update(Request $request, Ad $ad): RedirectResponse
+    public function update(UpdateAdRequest $request, Ad $ad): RedirectResponse
     {
         $this->adService->update($ad, $request->validated(), $request->file('image'));
         return redirect()->route('admin.ads.index')

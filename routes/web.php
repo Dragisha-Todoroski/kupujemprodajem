@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Frontend\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\AdController as AdminAdController;
@@ -13,12 +14,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
 // Routes for admins
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'is_admin'])
     ->group(function () {
         // Admin dashboard
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -40,17 +39,19 @@ Route::prefix('/')
     ->group(function () {
         /// Public  routes (accessible to everyone)
         Route::get('/', [FrontendAdController::class, 'index'])->name('index');
-        Route::get('/ads/{ad}', [FrontendAdController::class, 'show'])->name('show');
         Route::get('/category/{categoryId}/ads', [FrontendAdController::class, 'category'])->name('category');
 
          // Authenticated customer routes
-        Route::middleware('auth')->group(function () {
+        Route::middleware('auth', 'is_customer')->group(function () {
             Route::get('/ads/create', [FrontendAdController::class, 'create'])->name('create');
             Route::post('/ads', [FrontendAdController::class, 'store'])->name('store');
             Route::get('/ads/{ad}/edit', [FrontendAdController::class, 'edit'])->name('edit');
             Route::put('/ads/{ad}', [FrontendAdController::class, 'update'])->name('update');
             Route::delete('/ads/{ad}', [FrontendAdController::class, 'destroy'])->name('destroy');
         });
+
+        // Dynamic public route LAST (static routes must be declared before dynamic ones)
+        Route::get('/ads/{ad}', [FrontendAdController::class, 'show'])->name('show');
     });
 
 require __DIR__.'/auth.php';

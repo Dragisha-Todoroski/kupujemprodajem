@@ -15,7 +15,13 @@ class AdSeeder extends Seeder
             $this->call(CategorySeeder::class);
         }
 
-        // Creates 50 ads with random categories and users
-        Ad::factory(50)->create();
+        // Gets only leaf categories (lowest-layer children)
+        $categories = Category::doesntHave('children')->get();
+
+        // Creates 50 ads and assigns each to a random leaf category
+        Ad::factory(50)->make()->each(function ($ad) use ($categories) {
+            $ad->category_id = $categories->random()->getKey();
+            $ad->save();
+        });
     }
 }

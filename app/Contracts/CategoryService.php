@@ -3,12 +3,16 @@
 namespace App\Contracts;
 
 use App\Models\Category;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface CategoryService
 {
-    /** Fetch all categories */
-    public function getAll(): Collection;
+    /** Fetch all categories, optionally paginated */
+    public function getAll(?int $perPage = null): LengthAwarePaginator;
+
+    /** Get only leaf (lowest-layer) categories */
+    public function getLeafCategories(): Collection;
 
     /** Fetch a single category by ID */
     public function getById(string $id): Category;

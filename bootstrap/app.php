@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsCustomer;
@@ -19,5 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->renderable(function (AuthorizationException $e, $request) {
+            return response()->view('unauthorized', [], 403);
+        });
     })->create();

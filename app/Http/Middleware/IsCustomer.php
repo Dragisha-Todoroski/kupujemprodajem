@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class IsCustomer
 {
@@ -12,7 +13,7 @@ class IsCustomer
     {
         // If not logged in, or logged in as anything but a customer, throws 403 Unauthorized
         if (!auth()->check() || !auth()->user()->isCustomer()) {
-            return redirect('/')->with('error', 'You are not authorized to access this page.');
+            return response()->view('unauthorized', [], 403);
         }
 
         return $next($request);

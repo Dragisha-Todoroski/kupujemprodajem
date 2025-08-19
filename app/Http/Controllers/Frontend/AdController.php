@@ -41,12 +41,12 @@ class AdController extends Controller
 
         $ads = $this->adService->search($filters, 12); // paginate 12 ads per page
         $categories = $this->categoryService->getAll(); // multi-level categories
-
-        return view('frontend.ads.index', compact('ads', 'categories', 'filters'));
+        $leafCategories = $this->categoryService->getLeafCategories(); // for filter dropdown
+        return view('frontend.ads.index', compact('ads', 'categories', 'leafCategories', 'filters'));
     }
 
     /**
-     * Dedicated page for filtered ads by category
+     * Reused index page for filtered ads by category
      * No other filters applied by default
      */
     public function category(string $categoryId): View
@@ -56,7 +56,8 @@ class AdController extends Controller
         // Only filter by this category
         $ads = $this->adService->search(['category_id' => $category->getKey()], 12);
         $categories = $this->categoryService->getAll();
-        return view('frontend.ads.index', compact('ads', 'categories', 'category'));
+        $leafCategories = $this->categoryService->getLeafCategories();
+        return view('frontend.ads.index', compact('ads', 'categories', 'leafCategories', 'category'));
     }
 
     /**
@@ -76,8 +77,8 @@ class AdController extends Controller
      */
     public function create(): View
     {
-        $categories = $this->categoryService->getAll();
-        return view('frontend.ads.create', compact('categories'));
+        $leafCategories = $this->categoryService->getLeafCategories();
+        return view('frontend.ads.create', compact('leafCategories'));
     }
 
     /**
@@ -85,8 +86,8 @@ class AdController extends Controller
      */
     public function store(StoreAdRequest $request): RedirectResponse
     {
-        $this->adService->create($request->validated(), $request->file('image'));
-        return redirect()->route('frontend.ads.index')->with('success', 'Ad created successfully.');
+        $ad = $this->adService->create($request->validated(), $request->file('image'));
+        return redirect()->route('ads.show', $ad->getKey())->with('success', 'Ad created successfully.');
     }
 
     /**
@@ -94,8 +95,8 @@ class AdController extends Controller
      */
     public function edit(Ad $ad): View
     {
-        $categories = $this->categoryService->getAll();
-        return view('frontend.ads.edit', compact('ad', 'categories'));
+        $leafCategories = $this->categoryService->getLeafCategories();
+        return view('frontend.ads.edit', compact('ad', 'leafCategories'));
     }
 
     /**
@@ -104,7 +105,7 @@ class AdController extends Controller
     public function update(UpdateAdRequest $request, Ad $ad): RedirectResponse
     {
         $this->adService->update($ad, $request->validated(), $request->file('image'));
-        return redirect()->route('frontend.ads.show', $ad->getKey())
+        return redirect()->route('ads.show', $ad->getKey())
                         ->with('success', 'Ad updated successfully.');
     }
 
@@ -114,6 +115,6 @@ class AdController extends Controller
     public function destroy(Ad $ad): RedirectResponse
     {
         $this->adService->delete($ad);
-        return redirect()->route('frontend.ads.index')->with('success', 'Ad deleted successfully.');
+        return redirect()->route('profile.edit')->with('success', 'Ad deleted successfully.');
     }
 }
