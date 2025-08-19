@@ -54,12 +54,12 @@
 
     <!-- Image -->
     <div class="mb-4">
-        <label for="image" class="block text-gray-700 font-semibold mb-1">Upload Image</label>
+        <label for="image_path" class="block text-gray-700 font-semibold mb-1">Upload Image</label>
         @if(!empty($ad->image_path))
             <img src="{{ asset('storage/' . $ad->image_path) }}" alt="Current Image" class="w-48 h-auto mb-2 rounded border">
         @endif
-        <input type="file" name="image" id="image" class="w-full border rounded p-2 @error('image') border-red-500 @enderror">
-        @error('image')
+        <input type="file" name="image_path" id="image_path class="w-full border rounded p-2 @error('image_path') border-red-500 @enderror">
+        @error('image_path')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
     </div>

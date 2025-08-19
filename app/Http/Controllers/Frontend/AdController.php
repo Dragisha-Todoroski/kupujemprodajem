@@ -86,7 +86,7 @@ class AdController extends Controller
      */
     public function store(StoreAdRequest $request): RedirectResponse
     {
-        $ad = $this->adService->create($request->validated(), $request->file('image'));
+        $ad = $this->adService->create($request->validated(), $request->file('image_path'));
         return redirect()->route('ads.show', $ad->getKey())->with('success', 'Ad created successfully.');
     }
 
@@ -104,7 +104,7 @@ class AdController extends Controller
      */
     public function update(UpdateAdRequest $request, Ad $ad): RedirectResponse
     {
-        $this->adService->update($ad, $request->validated(), $request->file('image'));
+        $this->adService->update($ad, $request->validated(), $request->file('image_path'));
         return redirect()->route('ads.show', $ad->getKey())
                         ->with('success', 'Ad updated successfully.');
     }

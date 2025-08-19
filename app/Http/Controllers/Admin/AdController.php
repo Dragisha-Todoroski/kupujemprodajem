@@ -48,7 +48,7 @@ class AdController extends Controller
      */
     public function store(StoreAdRequest $request): RedirectResponse
     {
-        $this->adService->create($request->validated(), $request->file('image'));
+        $this->adService->create($request->validated(), $request->file('image_path'));
         return redirect()->route('admin.ads.index')
                          ->with('success', 'Ad created successfully.');
     }
@@ -67,7 +67,7 @@ class AdController extends Controller
      */
     public function update(UpdateAdRequest $request, Ad $ad): RedirectResponse
     {
-        $this->adService->update($ad, $request->validated(), $request->file('image'));
+        $this->adService->update($ad, $request->validated(), $request->file('image_path'));
         return redirect()->route('admin.ads.index')
                          ->with('success', 'Ad updated successfully.');
     }
