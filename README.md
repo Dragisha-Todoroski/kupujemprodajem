@@ -74,7 +74,7 @@ cd kupujemprodajem\
 ```bash
 composer install
 npm install
-npm run dev
+npm run dev-all
 ```
 
 3. Environment setup
@@ -85,6 +85,15 @@ php artisan key:generate
 ```
 
 4. Edit .env to configure DB credentials
+
+```bash
+DB_CONNECTION=mysql       # The type of your database (MySQL)
+DB_HOST=127.0.0.1         # Your database host
+DB_PORT=3306               # Database port (default MySQL port)
+DB_DATABASE=your_database_name   # Name of the database you created
+DB_USERNAME=your_database_username   # Database user
+DB_PASSWORD=your_database_password   # Database password
+```
 
 5. Run DB migrations
 
