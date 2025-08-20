@@ -36,8 +36,9 @@ class EloquentAdService implements AdService
      */
     public function search(array $filters, ?int $perPage = null): LengthAwarePaginator
     {
-        $query = Ad::with(['user', 'category'])->latest();
+        $query = Ad::with(['user', 'category']);
 
+        // ----- FILTERS -----
         if (!empty($filters['title'])) {
             $query->where('title', 'like', '%' . $filters['title'] . '%');
         }
@@ -62,11 +63,24 @@ class EloquentAdService implements AdService
             $query->where('category_id', $filters['category_id']);
         }
 
-        if ($perPage) {
-            return $query->paginate($perPage);
+        // ----- SORTING -----
+        $allowedColumns = ['title', 'price', 'condition', 'created_at'];
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sortOrder = $filters['sort_order'] ?? 'desc';
+
+        // Validates inputs
+        if (!in_array($sortBy, $allowedColumns)) {
+            $sortBy = 'created_at';
         }
 
-        return $query->get();
+        if (!in_array($sortOrder, ['asc', 'desc'])) {
+            $sortOrder = 'desc';
+        }
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        $perPage = $perPage ?? 12; // default 12 per page
+        return $query->paginate($perPage)->withQueryString();
     }
 
     /** Create a new ad from validated data */

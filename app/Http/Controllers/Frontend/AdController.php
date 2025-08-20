@@ -36,7 +36,9 @@ class AdController extends Controller
             'min_price',
             'max_price',
             'location',
-            'category_id'
+            'category_id',
+            'sort_by',
+            'sort_order',
         ]);
 
         $ads = $this->adService->search($filters, 12); // paginate 12 ads per page
