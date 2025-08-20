@@ -182,7 +182,7 @@ php artisan storage:link
 
 ```bash
 npm run dev # for Vite frontend
-php artisan server # for Laravel server backend
+php artisan serve # for Laravel server backend
 
 OR
 
