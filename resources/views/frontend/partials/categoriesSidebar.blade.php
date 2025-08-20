@@ -1,5 +1,5 @@
 @php
-    // Split categories into ones with children and leaf nodes
+    // Split categories into ones with children and leaf categories (no children)
     $withChildren = $categories->filter(fn($category) => $category->children->count());
     $leaves = $categories->filter(fn($category) => !$category->children->count());
 @endphp
@@ -8,8 +8,8 @@
     {{-- Categories with children first --}}
     @foreach ($withChildren as $category)
         <li>
-            <div x-data="{ open: false }" class="flex flex-col">
-                <button @click="open = !open"
+            <div x-data="categoryItem('{{ $category->getKey() }}')" class="flex flex-col">
+                <button @click="toggle"
                     class="flex justify-between items-center w-full text-left font-semibold px-2 py-1 rounded bg-gray-100 hover:text-blue-600 focus:outline-none transition">
                     {{ $category->name }}
                     <span x-show="!open">+</span>
@@ -35,3 +35,17 @@
         </li>
     @endforeach
 </ul>
+
+
+{{-- Each category's open/collapsed state is saved in LocalStorage --}}
+<script>
+    function categoryItem(id) {
+        return {
+            open: JSON.parse(localStorage.getItem('category-' + id)) || false,
+            toggle() {
+                this.open = !this.open;
+                localStorage.setItem('category-' + id, JSON.stringify(this.open));
+            }
+        }
+    }
+</script>
