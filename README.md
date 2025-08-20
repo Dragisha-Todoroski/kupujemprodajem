@@ -9,6 +9,19 @@ Users can register and log in as:
 
 ---
 
+## Requirements / Recommendations
+
+These are the software versions the project was developed and tested with. Using these versions is recommended for best stability, though the app may work with slightly different versions.
+
+- **PHP**: 8.2.12 — recommended >= 8.1
+- **Composer**: 2.8.10 — recommended >= 2.5
+- **Node.js**: 22.18.0 — recommended >= 18
+- **npm**: 10.9.1 — recommended >= 9
+- **MySQL / MariaDB**: MariaDB 10.4.32 — recommended >= 10.4 (or MySQL >= 8.0)
+- **Laravel**: 12.23.1 — recommended >= 12.x
+
+---
+
 ## Features Implemented
 
 ### Authentication & Users
@@ -17,7 +30,7 @@ Users can register and log in as:
 - Users table uses **UUID primary keys**.
 - Role-based authorization:
   - `role` column in users table (`customer` by default, `admin` for admins)
-  - `isAdmin()` method in **User** model
+  - `isAdmin()` and isCustomer() methods in **User** model
   - `IsAdmin` and `IsCustomer` middlewares for route protection
 - **User views**:
   - Blade templates in `resources/views/auth` for login, register, and password reset
@@ -127,7 +140,6 @@ cd kupujemprodajem\
 ```bash
 composer install
 npm install
-npm run dev-all
 ```
 
 3. Environment setup
@@ -158,4 +170,21 @@ php artisan migrate
 
 ```bash
 php artisan db:seed
+```
+
+7. Create symbolic link for storage
+
+```bash
+php artisan storage:link
+```
+
+8. Run the app
+
+```bash
+npm run dev # for Vite frontend
+php artisan server # for Laravel server backend
+
+OR
+
+npm run dev-all # all-in-one command
 ```
