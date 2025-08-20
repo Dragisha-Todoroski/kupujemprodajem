@@ -1,6 +1,6 @@
 # kupujemprodajem
 
-Laravel-based web application for a small marketplace about posting and viewing ads (like kupujemprodajem.com).
+Laravel-based web application for a small marketplace for posting and viewing ads (like kupujemprodajem.com).
 
 Users can register and log in as:
 
@@ -9,56 +9,109 @@ Users can register and log in as:
 
 ---
 
-## Features Implemented So Far
+## Features Implemented
 
-- Laravel project setup with **Breeze authentication**.
-- **UUID primary keys** for `users` table.
-  - **Role-based authorization management**:
-    - `AdPolicy` ensures only admin users create, update, or delete ads, and customer users their own.
-    - `CategoryPolicy` ensures only admin users can create, update, or delete categories.
-    - Custom `IsAdmin` and `IsCustomer` middlewares for additional admin/customer authorization checks.
-    - `role` column in users table (`customer` by default, `admin` for admins)
-    - `isAdmin()` method in User model.
-- **Category system**:
-  - `categories` table with UUID primary key and `parent_id` for nested categories.
-  - `Category` model with UUID generation and parent/children relationships.
-  - `UserRole` enum for `role` property of `User` model.
-  - Recursive fetching of all nested descendants via `allDescendantsRecursive()` method.
-  - `descendantsKeys()` helps enforce safe category updates.
-  - **Validation and business rules**:
-    - Prevents circular relationships (a category cannot be its own or its child's descendant).
-    - Validation handled in `StoreCategoryRequest` and `UpdateCategoryRequest` using reusable traits (`CategoryRulesTrait` and `CategoryMessagesTrait`).
-  - **Service layer**:
-    - `CategoryService` interface defines standard methods for category operations.
-    - `EloquentCategoryService` implements `CategoryService`, including recursive fetching of categories.
-  - **Controller layer**:
-    - `Admin\CategoryController` for admin CRUD on categories.
-- **Ads system**:
-  - `ads` table with UUID primary key, and relations to `users` and `categories`.
-  - `Ad` model with UUID generation and relationships to `User` and `Category`.
-  - `AdCondition` enum for `condition` property of `Ad` model.
-  - **Validation and business rules**:
-    - Validation handled in `StoreAdRequest` and `UpdateAdRequest` using reusable traits (`AdRulesTrait` and `AdMessagesTrait`).
-  - **Service layer**:
-    - `AdService` interface defines standard methods for ad operations (getAll, create, update, delete, search).
-    - `EloquentAdService` implements `AdService`, handling all business logic including image uploads and eager-loading relationships.
-  - **Controller layer**:
-    - `Frontend\AdController` for guest and customer access:
-      - Index with filters and pagination.
-      - Category-specific listings.
-      - Show single ad.
-      - Authenticated customers can create, update, and delete their own ads.
-    - `Admin\AdController` for admin access:
-      - Full CRUD on all ads (index, create, store, edit, update, delete).
-      - No `show` route for admin views.
-- **Seeders and Factories for realistic fake data**:
-  - `AdminUserSeeder` to generate a fixed admin account.
-  - `CategorySeeder` based on `CategoryFactory` with 3 levels of category nesting.
-  - `AdSeeder` based on `AdFactory` using random existing users and categories.
-- `sessions` and `password_reset_tokens` tables migrated and compatible with UUID users.
-- Basic User model setup with UUID generation in `boot()` method.
+### Authentication & Users
+
+- Laravel **Breeze authentication** setup.
+- Users table uses **UUID primary keys**.
+- Role-based authorization:
+  - `role` column in users table (`customer` by default, `admin` for admins)
+  - `isAdmin()` method in **User** model
+  - `IsAdmin` and `IsCustomer` middlewares for route protection
+- **User views**:
+  - Blade templates in `resources/views/auth` for login, register, and password reset
+  - Admin users can manage all customers via `Admin\UserController`
 
 ---
+
+### Customers
+
+- `users` table with **UUID primary key**, `role` column (`customer` or `admin`)
+- **Policies**:
+  - `CustomerPolicy` ensures only admins can create/update/delete customers
+- **Validation**:
+  - `StoreCustomerRequest` and `UpdateCustomerRequest` with reusable traits (`CustomerRulesTrait`, `CustomerMessagesTrait`)
+- **Service layer**:
+  - `CustomerService` interface and `EloquentCustomerService` implementation
+- **Controller layer**:
+  - `ProfileController` allows customers to view and update their own profile
+  - `Admin\UserController` handles customer management (CRUD)
+- **Blade views**:
+  - Profile views: `resources/views/profile/partials/`
+  - Admin customer management views: `resources/views/admin/customers/`
+    - `index.blade.php`, `create.blade.php`, `edit.blade.php`
+- **Features**:
+  - Admin can create, edit, delete customers
+  - Customers can update personal info but cannot change roles
+  - Password reset handled via Laravel’s built-in `password_resets` table
+
+---
+
+### Categories
+
+- `categories` table with **UUID primary key** and `parent_id` for nested categories
+- Recursive fetching via `allDescendantsRecursive()`
+- **Policies**:
+  - `CategoryPolicy` ensures only admins can create/update/delete categories
+- **Validation**:
+  - `StoreCategoryRequest` and `UpdateCategoryRequest` with reusable traits (`CategoryRulesTrait`, `CategoryMessagesTrait`)
+- **Service layer**:
+  - `CategoryService` interface and `EloquentCategoryService` implementation
+- **Controller layer**:
+  - `Admin\CategoryController` handles category management (CRUD)
+- **Blade views**:
+  - Frontend sidebar for listing categories: `resources/views/frontend/partials/categoriesSidebar.blade.php`
+  - Admin category management views: `resources/views/admin/categories/`
+    - `index.blade.php`, `create.blade.php`, `edit.blade.php`, `partials/categoryOption.blade.php`, `partials/categoryRow.blade.php`
+- **Features**:
+  - Admin can create, edit, delete categories
+  - Prevents circular relationships (a category cannot be its own or its child's descendant)
+  - Nested categories displayed recursively
+  - Categories can be fetched with all descendants using `allDescendantsRecursive()`
+
+---
+
+### Ads
+
+- `ads` table with **UUID primary key**, relations to `users` and `categories`
+- `AdCondition` enum for ad conditions
+- **Policies**:
+  - `AdPolicy` ensures admins can manage all ads; customers manage only their own
+- **Validation**:
+  - `StoreAdRequest` and `UpdateAdRequest` with `AdRulesTrait` and `AdMessagesTrait`
+- **Service layer**:
+  - `AdService` interface and `EloquentAdService` implementation
+  - Handles creation, updating, deletion, image uploads, eager-loading relationships
+- **Controller layer**:
+  - `Frontend\AdController`: index, category listings, show, create/update/delete for customers
+  - `Admin\AdController`: full CRUD for admins
+- **Blade views**:
+  - Frontend ads views: `resources/views/frontend/ads/`
+    - `index.blade.php`, `show.blade.php`, `create.blade.php`, `edit.blade.php`, `partials/adForm.blade.php`
+  - Admin ads views: `resources/views/admin/ads/`
+    - `index.blade.php`, `create.blade.php`, `edit.blade.php`
+  - **Features**:
+  - Admin can create, edit, delete all ads
+  - Customers can create, edit, delete their own ads only
+  - Ads can have images uploaded and associated with categories and users
+  - Filter and sort ads by title, price, condition, category, or creation date
+  - Pagination supported for frontend listings
+
+---
+
+### Seeders & Factories
+
+- `AdminUserSeeder` generates a fixed admin account
+- `CategorySeeder` & `CategoryFactory` generates levels of category nesting
+- `AdSeeder` & `AdFactory` generate realistic ads linked to users and categories
+
+---
+
+### Database
+
+- Migrations include `users`, `ads`, `categories`, `sessions`, `password_resets`
+- UUID compatibility across tables
 
 ## Installation / Setup
 
