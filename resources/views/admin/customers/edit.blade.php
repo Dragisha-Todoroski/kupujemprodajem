@@ -21,7 +21,7 @@
 
         <form method="POST" action="{{ route('admin.customers.update', $customer->getKey()) }}">
             @csrf
-            @method('PATCH')
+            @method('PUT')
 
             {{-- Name --}}
             <div class="mb-4">
