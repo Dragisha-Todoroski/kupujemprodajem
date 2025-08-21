@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Ad;
 use App\Contracts\AdService;
+use App\Events\AdCreated;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -94,7 +95,12 @@ class EloquentAdService implements AdService
             $data['image_path'] = $image->store('ads', 'public'); // saves the uploaded image in 'storage/app/public/ads'
         }
 
-        return Ad::create($data);
+        $ad = Ad::create($data);
+
+        // Fires the event AFTER the ad has been created
+        event(new AdCreated($ad));
+
+        return $ad;
     }
 
      /** Update an existing ad with validated data */
