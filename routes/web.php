@@ -8,50 +8,106 @@ use App\Http\Controllers\Admin\AdController as AdminAdController;
 use App\Http\Controllers\Frontend\AdController as FrontendAdController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// -------------------- Profile routes --------------------
+Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+    Route::patch('/', [ProfileController::class, 'update'])->name('update');
+    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 });
 
-// Routes for admins
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'is_admin'])
-    ->group(function () {
-        // Admin dashboard
-        Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+// -------------------- Admin routes --------------------
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
 
-        // Admin Category CRUD
-        Route::resource('categories', CategoryController::class)->except(['show']);
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-        // Admin Ad CRUD
-        Route::resource('ads', AdminAdController::class)->except(['show']);
+    // Categories
+    Route::get('categories', [CategoryController::class, 'index'])
+        ->name('categories.index')
+        ->middleware('can:viewAny,App\Models\Category');
+    Route::get('categories/create', [CategoryController::class, 'create'])
+        ->name('categories.create')
+        ->middleware('can:create,App\Models\Category');
+    Route::post('categories', [CategoryController::class, 'store'])
+        ->name('categories.store')
+        ->middleware('can:create,App\Models\Category');
+    Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])
+        ->name('categories.edit')
+        ->middleware('can:update,category');
+    Route::put('categories/{category}', [CategoryController::class, 'update'])
+        ->name('categories.update')
+        ->middleware('can:update,category');
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy'])
+        ->name('categories.destroy')
+        ->middleware('can:delete,category');
 
-        // Admin Customer CRUD
-        Route::resource('customers', CustomerController::class)->except(['show']);
-    });
+    // Ads
+    Route::get('ads', [AdminAdController::class, 'index'])
+        ->name('ads.index')
+        ->middleware('can:viewAny,App\Models\Ad');
+    Route::get('ads/create', [AdminAdController::class, 'create'])
+        ->name('ads.create')
+        ->middleware('can:create,App\Models\Ad');
+    Route::post('ads', [AdminAdController::class, 'store'])
+        ->name('ads.store')
+        ->middleware('can:create,App\Models\Ad');
+    Route::get('ads/{ad}/edit', [AdminAdController::class, 'edit'])
+        ->name('ads.edit')
+        ->middleware('can:update,ad');
+    Route::put('ads/{ad}', [AdminAdController::class, 'update'])
+        ->name('ads.update')
+        ->middleware('can:update,ad');
+    Route::delete('ads/{ad}', [AdminAdController::class, 'destroy'])
+        ->name('ads.destroy')
+        ->middleware('can:delete,ad');
 
+    // Customers
+    Route::get('customers', [CustomerController::class, 'index'])
+        ->name('customers.index')
+        ->middleware('can:viewAny,App\Models\User');
+    Route::get('customers/create', [CustomerController::class, 'create'])
+        ->name('customers.create')
+        ->middleware('can:create,App\Models\User');
+    Route::post('customers', [CustomerController::class, 'store'])
+        ->name('customers.store')
+        ->middleware('can:create,App\Models\User');
+    Route::get('customers/{customer}/edit', [CustomerController::class, 'edit'])
+        ->name('customers.edit')
+        ->middleware('can:update,customer');
+    Route::put('customers/{customer}', [CustomerController::class, 'update'])
+        ->name('customers.update')
+        ->middleware('can:update,customer');
+    Route::delete('customers/{customer}', [CustomerController::class, 'destroy'])
+        ->name('customers.destroy')
+        ->middleware('can:delete,customer');
+});
 
-// Routes for ads
-Route::prefix('/')
-    ->name('ads.')
-    ->group(function () {
-        /// Public  routes (accessible to everyone)
-        Route::get('/', [FrontendAdController::class, 'index'])->name('index');
-        Route::get('/category/{categoryId}/ads', [FrontendAdController::class, 'category'])->name('category');
+// -------------------- Frontend customer ads routes --------------------
+Route::middleware(['auth', 'is_customer'])->prefix('ads')->name('ads.')->group(function () {
+    Route::get('create', [FrontendAdController::class, 'create'])
+        ->name('create')
+        ->middleware('can:create,App\Models\Ad');
+    Route::post('/', [FrontendAdController::class, 'store'])
+        ->name('store')
+        ->middleware('can:create,App\Models\Ad');
+    Route::get('{ad}/edit', [FrontendAdController::class, 'edit'])
+        ->name('edit')
+        ->middleware('can:update,ad');
+    Route::put('{ad}', [FrontendAdController::class, 'update'])
+        ->name('update')
+        ->middleware('can:update,ad');
+    Route::delete('{ad}', [FrontendAdController::class, 'destroy'])
+        ->name('destroy')
+        ->middleware('can:delete,ad');
+});
 
-         // Authenticated customer routes
-        Route::middleware('auth', 'is_customer')->group(function () {
-            Route::get('/ads/create', [FrontendAdController::class, 'create'])->name('create');
-            Route::post('/ads', [FrontendAdController::class, 'store'])->name('store');
-            Route::get('/ads/{ad}/edit', [FrontendAdController::class, 'edit'])->name('edit');
-            Route::put('/ads/{ad}', [FrontendAdController::class, 'update'])->name('update');
-            Route::delete('/ads/{ad}', [FrontendAdController::class, 'destroy'])->name('destroy');
-        });
+// -------------------- Public ads routes --------------------
+Route::get('/', [FrontendAdController::class, 'index'])->name('ads.index');
+Route::get('/category/{categoryId}/ads', [FrontendAdController::class, 'category'])->name('ads.category');
+Route::get('/ads/{ad}', [FrontendAdController::class, 'show'])->name('ads.show');
 
-        // Dynamic public route LAST (static routes must be declared before dynamic ones)
-        Route::get('/ads/{ad}', [FrontendAdController::class, 'show'])->name('show');
-    });
+// Redirects /ads GET to homepage to avoid Whoops
+Route::get('/ads', function () {
+    return redirect()->route('ads.index');
+});
 
 require __DIR__.'/auth.php';

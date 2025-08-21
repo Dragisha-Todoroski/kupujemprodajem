@@ -9,7 +9,7 @@
 
         <form action="{{ route('admin.categories.update', $category->getKey()) }}" method="POST">
             @csrf
-            @method('PATCH')
+            @method('PUT')
 
             {{-- Name --}}
             <div class="mb-4">

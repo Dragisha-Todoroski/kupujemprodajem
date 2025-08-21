@@ -11,11 +11,7 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-        // Only allow authenticated users
-        $this->middleware(['auth']);
-    }
+    public function __construct() {}
 
     /**
      * Show the customer profile page with their own ads

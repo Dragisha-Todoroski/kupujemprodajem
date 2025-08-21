@@ -11,11 +11,7 @@ use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        // Only allows admins
-        $this->middleware(['auth', 'is_admin']);
-    }
+    public function __construct() {}
 
     public function index(): View
     {

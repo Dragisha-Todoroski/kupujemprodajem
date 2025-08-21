@@ -5,21 +5,24 @@ namespace App\Services;
 use App\Contracts\CategoryService;
 use App\Models\Category;
 use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class EloquentCategoryService implements CategoryService
 {
-    /** Fetch all categories */
-    public function getAll(?int $perPage = null): Collection
+    /** Return all categories (Collection) */
+    public function getAll(): Collection
     {
-        // Returns multi-level categories
-        $query = Category::with('allDescendantsRecursive') // each nested child is included automatically
-            ->whereNull('parent_id'); // fetches only top-level categories as starting point
+        return Category::with('allDescendantsRecursive')
+            ->whereNull('parent_id')
+            ->get();
+    }
 
-        if ($perPage) {
-            return $query->paginate($perPage);
-        }
-
-        return $query->get();
+    /** Return paginated categories for admin CRUD */
+    public function getAllPaginated(int $perPage): LengthAwarePaginator
+    {
+        return Category::with('allDescendantsRecursive')
+            ->whereNull('parent_id')
+            ->paginate($perPage);
     }
 
     /** Get only leaf (lowest-layer) categories */

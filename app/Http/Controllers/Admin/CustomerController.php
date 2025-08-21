@@ -12,14 +12,7 @@ use Illuminate\View\View;
 
 class CustomerController extends Controller
 {
-    public function __construct(private readonly CustomerService $customerService)
-    {
-        // Only authenticated users can access these routes
-        $this->middleware(['auth', 'is_admin']);
-
-        // Applies policy automatically to action methods
-        $this->authorizeResource(User::class, 'customer');
-    }
+    public function __construct(private readonly CustomerService $customerService) {}
 
     /**
      * Display all customers in admin dashboard

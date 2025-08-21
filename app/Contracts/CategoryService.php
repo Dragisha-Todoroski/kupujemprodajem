@@ -4,11 +4,15 @@ namespace App\Contracts;
 
 use App\Models\Category;
 use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface CategoryService
 {
-    /** Fetch all categories, optionally paginated */
-    public function getAll(?int $perPage = null): Collection;
+    /** Fetch all categories (always returns a Collection) */
+    public function getAll(): Collection;
+
+    /** Fetch paginated categories for admin tables */
+    public function getAllPaginated(int $perPage): LengthAwarePaginator;
 
     /** Get only leaf (lowest-layer) categories */
     public function getLeafCategories(): Collection;

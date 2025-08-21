@@ -17,13 +17,7 @@ class AdController extends Controller
     public function __construct(
         private readonly AdService $adService,
         private readonly CategoryService $categoryService
-    ) {
-        // Ensures auth for create/edit/delete by customers
-        $this->middleware(['auth', 'is_customer'])->only(['create', 'store', 'edit', 'update', 'destroy']);
-
-        // Applies policy automatically to action methods
-        $this->authorizeResource(Ad::class, 'ad');
-    }
+    ) {}
 
     /**
      * Display a listing of all (filtered) ads based on search params

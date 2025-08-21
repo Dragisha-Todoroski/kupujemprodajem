@@ -12,21 +12,14 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    public function __construct(private readonly CategoryService $categoryService)
-    {
-        // Only authenticated users can access these routes
-        $this->middleware(['auth', 'is_admin']);
-
-        // Applies policy automatically to action methods
-        $this->authorizeResource(Category::class, 'category');
-    }
+    public function __construct(private readonly CategoryService $categoryService) {}
 
     /**
      * Display all ads in admin dashboard
      */
     public function index(): View
     {
-        $categories = $this->categoryService->getAll(4);
+        $categories = $this->categoryService->getAllPaginated(4);
         return view('admin.categories.index', compact('categories'));
     }
 
